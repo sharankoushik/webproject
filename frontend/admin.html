@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickService - Admin Verification</title>
+    <link rel="stylesheet" href="style.css">
+<style data-page>
+header { background: #0f172a; border-bottom: none; }
+header h1 a, header p { color: #fff; }
+#loginBox { max-width: 400px; margin: 40px auto; border-radius: 14px; box-shadow: 0 10px 28px rgba(0,0,0,.12); }
+#loginBox label { display: block; margin: 10px 0 4px; font-weight: bold; }
+#loginBox input { width: 100%; padding: 10px; border-radius: 8px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+.stat { border-radius: 12px; border-top: 4px solid var(--accent); box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+.stat b { color: var(--accent); }
+.tabs { border-bottom: 2px solid var(--line); padding-bottom: 10px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { border-radius: 12px; }
+.admin-note { padding: 8px; border-radius: 6px; border: 1px solid var(--line); }
+.badge.pending { background: #fef9c3; }
+#pager button { margin-left: 6px; }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+    <h1><a href="op.html">QuickService</a></h1>
+    <p>Admin Verification</p>
+</header>
+
+<main>
+    <!-- Login -->
+    <div class="box" id="loginBox">
+        <h2>Admin Login</h2>
+        <form id="loginForm">
+            <label for="email">Admin Email</label>
+            <input type="text" id="email" placeholder="admin@123" autocomplete="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+            <button type="submit" class="full">Login</button>
+        </form>
+        <div id="loginMsg"></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dash" class="hidden">
+        <h2>Provider Verification</h2>
+        <p class="muted">Only providers you verify appear in search results as verified.
+            <button type="button" id="logout" class="button outline" style="float:right">Logout</button></p>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="tabs">
+            <button type="button" class="tab active" data-status="pending">Pending</button>
+            <button type="button" class="tab" data-status="verified">Verified</button>
+            <button type="button" class="tab" data-status="rejected">Rejected</button>
+        </div>
+
+        <input type="search" id="search" placeholder="Search by name, phone, city or service" style="width:100%;padding:9px;margin-bottom:12px">
+
+        <div id="list" class="grid"></div>
+        <p id="pager" class="muted"></p>
+        <div id="msg"></div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 QuickService. All rights reserved.</p>
+</footer>
+
+<script>
+(function () {
+    var API = location.protocol === "file:" ? "http://localhost:3000/api" : "/api";
+    var token = sessionStorage.getItem("adminToken") || "";
+    var state = { status: "pending", page: 1, q: "" };
+
+    var $ = function (id) { return document.getElementById(id); };
+
+    function show(el, text, type) { el.textContent = text; el.className = text ? "message " + type : ""; }
+
+    function call(path, opts) {
+        opts = opts || {};
+        opts.headers = Object.assign({ "Content-Type": "application/json" }, token ? { Authorization: "Bearer " + token } : {});
+        return fetch(API + path, opts).then(function (r) {
+            return r.text().then(function (body) {
+                var data;
+                try {
+                    data = body ? JSON.parse(body) : {};
+                } catch (error) {
+                    throw new Error("The QuickService API did not return JSON. Deploy the Node.js backend and open the website from that backend URL, not from GitHub Pages.");
+                }
+                if (r.status === 401 && token) { logout(); }
+                if (!r.ok) throw new Error(data.error || "Request failed");
+                return data;
+            });
+        }).catch(function (error) {
+            if (error instanceof TypeError) {
+                throw new Error("Cannot reach the QuickService server. Check that the backend is deployed and running.");
+            }
+            throw error;
+        });
+    }
+
+    function logout() {
+        token = "";
+        sessionStorage.removeItem("adminToken");
+        $("dash").classList.add("hidden");
+        $("loginBox").classList.remove("hidden");
+    }
+
+    function enter() {
+        $("loginBox").classList.add("hidden");
+        $("dash").classList.remove("hidden");
+        loadStats();
+        loadList();
+    }
+
+    function el(tag, text, cls) {
+        var e = document.createElement(tag);
+        if (text !== undefined) e.textContent = text;   // textContent: registrations are user input, never inserted as HTML
+        if (cls) e.className = cls;
+        return e;
+    }
+
+    function loadStats() {
+        call("/admin/stats").then(function (s) {
+            var box = $("stats");
+            box.innerHTML = "";
+            [["Pending", s.pending], ["Verified", s.verified], ["Rejected", s.rejected], ["Bookings", s.bookings], ["Ratings", s.reviews]]
+                .forEach(function (x) {
+                    var d = el("div", undefined, "stat");
+                    d.appendChild(el("b", x[1]));
+                    d.appendChild(document.createTextNode(x[0]));
+                    box.appendChild(d);
+                });
+        }).catch(function () {});
+    }
+
+    function act(id, action, note) {
+        call("/admin/providers/" + id + "/" + action, { method: "PATCH", body: JSON.stringify({ note: note || "" }) })
+            .then(function () { show($("msg"), "Provider updated.", "success"); loadStats(); loadList(); })
+            .catch(function (e) { show($("msg"), e.message, "error"); });
+    }
+
+    function card(p) {
+        var c = el("div", undefined, "card");
+        c.appendChild(el("span", p.status, "badge " + p.status));
+        c.appendChild(el("h3", p.name));
+        c.appendChild(el("p", p.service + " — " + p.city + (p.area ? ", " + p.area : "")));
+        c.appendChild(el("p", "Phone: " + (p.phone || "not given") + (p.email ? " | " + p.email : "")));
+        c.appendChild(el("p", "Experience: " + (p.experience || 0) + " years" + (p.price ? " | " + p.price : "")));
+        c.appendChild(el("p", "ID proof: " + (p.idProofType ? p.idProofType + " " + p.idProofNumber : "none submitted (imported listing)")));
+        if (p.description) c.appendChild(el("p", p.description, "muted"));
+        c.appendChild(el("p", "Source: " + p.source + " | Added " + new Date(p.createdAt).toLocaleDateString(), "muted"));
+        if (p.adminNote) c.appendChild(el("p", "Admin note: " + p.adminNote, "muted"));
+
+        var note = el("input");
+        note.className = "admin-note";
+        note.placeholder = "Note (required when rejecting)";
+        c.appendChild(note);
+
+        var bar = el("div", undefined, "admin-actions");
+        if (p.status !== "verified") {
+            var v = el("button", "Verify");
+            v.onclick = function () { act(p._id, "verify", note.value); };
+            bar.appendChild(v);
+        }
+        if (p.status !== "rejected") {
+            var r = el("button", "Reject", "danger");
+            r.onclick = function () { act(p._id, "reject", note.value); };
+            bar.appendChild(r);
+        }
+        if (p.status !== "pending") {
+            var u = el("button", "Move to pending");
+            u.className = "button outline";
+            u.onclick = function () { act(p._id, "reset", note.value); };
+            bar.appendChild(u);
+        }
+        c.appendChild(bar);
+        return c;
+    }
+
+    function loadList() {
+        var qs = "?status=" + state.status + "&page=" + state.page + (state.q ? "&q=" + encodeURIComponent(state.q) : "");
+        call("/admin/providers" + qs).then(function (res) {
+            var list = $("list");
+            list.innerHTML = "";
+            if (!res.items.length) list.appendChild(el("p", "No " + state.status + " providers.", "muted"));
+            res.items.forEach(function (p) { list.appendChild(card(p)); });
+
+            var pager = $("pager");
+            pager.innerHTML = "";
+            pager.appendChild(document.createTextNode(res.total + " provider(s) — page " + res.page + " of " + res.pages + " "));
+            if (res.page > 1) { var a = el("button", "Previous"); a.onclick = function () { state.page--; loadList(); }; pager.appendChild(a); }
+            if (res.page < res.pages) { var b = el("button", "Next"); b.onclick = function () { state.page++; loadList(); }; pager.appendChild(b); }
+        }).catch(function (e) { show($("msg"), e.message, "error"); });
+    }
+
+    $("loginForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        call("/admin/login", { method: "POST", body: JSON.stringify({ email: $("email").value, password: $("password").value }) })
+            .then(function (d) { token = d.token; sessionStorage.setItem("adminToken", token); enter(); })
+            .catch(function (err) { show($("loginMsg"), err.message, "error"); });
+    });
+
+    $("logout").onclick = function () {
+        logout();
+        window.location.href = "pp.html";
+    };
+
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) {
+        t.onclick = function () {
+            document.querySelector(".tab.active").classList.remove("active");
+            t.classList.add("active");
+            state.status = t.dataset.status; state.page = 1;
+            loadList();
+        };
+    });
+
+    var timer;
+    $("search").addEventListener("input", function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () { state.q = $("search").value; state.page = 1; loadList(); }, 300);
+    });
+
+    if (token) enter();
+})();
+</script>
+</body>
+</html>

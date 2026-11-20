@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickService - Local Service Finder</title>
+    <link rel="stylesheet" href="style.css">
+<style data-page>
+header { border-bottom: 3px solid var(--accent); }
+.notice { border-left: 4px solid var(--accent); border-radius: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-top: 16px; }
+.card { text-align: center; border-radius: 12px; padding: 22px 16px; transition: transform .15s ease, box-shadow .15s ease; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 10px 22px rgba(0,0,0,.12); border-color: var(--accent); }
+.card h3 { font-size: 20px; }
+.card .button { display: inline-block; margin-top: 8px; }
+.small-link, .muted a { font-weight: bold; }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+    <h1><a href="op.html">QuickService</a></h1>
+    <p>All home services at one stop</p>
+</header>
+
+<div class="notice">We are currently available in only a few cities.</div>
+
+<main>
+    <h2>Find Local Service Providers</h2>
+    <p class="muted">Choose your city to see the services available.</p>
+
+    <div class="grid">
+
+<div class="card">
+    <h3>Hyderabad</h3>
+    <p>Find electricians, carpenters, cleaners and more.</p>
+    <div class="actions"><a class="button" href="service.html">View Services</a></div>
+</div>
+<div class="card">
+    <h3>Bengaluru</h3>
+    <p>Find trusted home service providers near you.</p>
+    <div class="actions"><a class="button" href="serviceblr.html">View Services</a></div>
+</div>
+<div class="card">
+    <h3>Mumbai</h3>
+    <p>Book professional home services easily and quickly.</p>
+    <div class="actions"><a class="button" href="servicemum.html">View Services</a></div>
+</div>
+<div class="card">
+    <h3>Chennai</h3>
+    <p>Connect with reliable service providers in Chennai.</p>
+    <div class="actions"><a class="button" href="serviceche.html">View Services</a></div>
+</div>
+
+    </div>
+
+    <p class="muted">Are you a service provider? <a href="provider-register.html">Register here</a> and get verified.</p>
+
+    <p class="back"><a class="button outline" href="pp.html">Logout</a></p>
+</main>
+
+<footer>
+    <p>&copy; 2026 QuickService. All rights reserved.</p>
+    <p><a href="more.html">About Us</a> | <a href="admin.html">Admin</a> | <a href="copyright.html">Copyright Policy</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickService - Register as a Provider</title>
+    <link rel="stylesheet" href="style.css">
+<style data-page>
+
+header { border-bottom: 3px solid var(--accent); }
+.box { max-width: 620px; margin: 0 auto; padding: 26px 28px; border-radius: 14px; box-shadow: 0 10px 28px rgba(0,0,0,.08); }
+.box h2 { margin-top: 0; }
+.form-row label { color: var(--ink); font-size: 14px; }
+.form-row input, .form-row select, .form-row textarea { border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20,125,114,.18); }
+.full { width: 100%; padding: 12px; font-size: 16px; border-radius: 8px; margin-top: 6px; }
+#message { margin-top: 14px; padding: 10px 12px; border-radius: 8px; }
+#message:empty { display: none; }
+@media (max-width: 600px) { .box { padding: 20px 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+    <h1><a href="op.html">QuickService</a></h1>
+    <p>All home services at one stop</p>
+</header>
+
+<main>
+    <div class="box">
+        <h2>Register as a Service Provider</h2>
+        <p class="muted">After you register, our admin checks your details. You appear as <b>Verified</b> once approved.</p>
+
+        <form id="regForm">
+            <div class="form-row"><label for="name">Name / Business name *</label>
+                <input id="name" maxlength="80" required></div>
+
+            <div class="form-row"><label for="service">Service *</label>
+                <select id="service" required>
+                    <option value="">Select service</option>
+                    <option>Plumber</option><option>Electrician</option><option>Cleaner</option>
+                    <option>Carpenter</option><option>AC Technician</option><option>Painter</option>
+                    <option>Laundry</option><option>Vehicle Washing</option><option>Moving &amp; Packing</option>
+                </select></div>
+
+            <div class="form-row"><label for="city">City *</label>
+                <select id="city" required>
+                    <option value="">Select city</option>
+                    <option>Hyderabad</option><option>Bengaluru</option><option>Mumbai</option><option>Chennai</option>
+                </select></div>
+
+            <div class="form-row"><label for="area">Area</label><input id="area" maxlength="80"></div>
+            <div class="form-row"><label for="phone">Phone (10 digits) *</label><input id="phone" maxlength="10" inputmode="numeric" required></div>
+            <div class="form-row"><label for="email">Email</label><input id="email" type="email"></div>
+            <div class="form-row"><label for="experience">Years of experience</label><input id="experience" type="number" min="0" max="60"></div>
+            <div class="form-row"><label for="price">Price (e.g. ₹300 / Visit)</label><input id="price" maxlength="40"></div>
+
+            <div class="form-row"><label for="idProofType">ID proof type *</label>
+                <select id="idProofType" required>
+                    <option value="">Select</option>
+                    <option>Aadhaar</option><option>PAN</option><option>Driving Licence</option><option>Voter ID</option>
+                </select></div>
+            <div class="form-row"><label for="idProofNumber">ID proof number *</label><input id="idProofNumber" maxlength="30" required></div>
+
+            <div class="form-row"><label for="description">About your work</label><textarea id="description" rows="3" maxlength="400"></textarea></div>
+
+            <button type="submit" class="full">Submit for verification</button>
+        </form>
+        <div id="message"></div>
+        <p class="small-link"><a href="op.html">Back to cities</a></p>
+        <p class="back"><a class="button outline" id="logoutBtn" href="pp.html">Logout</a></p>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 QuickService. All rights reserved.</p>
+    <p><a href="more.html">About Us</a> | <a href="copyright.html">Copyright Policy</a></p>
+</footer>
+
+<script src="app.js"></script>
+<script>
+document.getElementById("phone").addEventListener("input", function () { this.value = this.value.replace(/\D/g, ""); });
+
+document.getElementById("regForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var msg = document.getElementById("message");
+    var body = {};
+    ["name", "service", "city", "area", "phone", "email", "experience", "price", "idProofType", "idProofNumber", "description"]
+        .forEach(function (id) { body[id] = document.getElementById(id).value; });
+
+    api("/providers/register", { method: "POST", body: JSON.stringify(body) })
+        .then(function (d) {
+            msg.textContent = d.message;
+            msg.className = "message success";
+            document.getElementById("regForm").reset();
+        })
+        .catch(function (err) {
+            msg.textContent = err.message;
+            msg.className = "message error";
+        });
+});
+</script>
+</body>
+</html>

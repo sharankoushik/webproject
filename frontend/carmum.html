@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickService - Carpentry Services Mumbai</title>
+    <link rel="stylesheet" href="style.css">
+<style data-page>
+:root { --accent: #7c4a1e; --accent-hover: #5f3813; --soft: #f3e8dc; --soft-line: #7c4a1e33; }
+header { border-bottom: 3px solid var(--accent); }
+main h2 { display: inline-block; padding-bottom: 6px; border-bottom: 3px solid var(--accent); margin-bottom: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+.card { border-top: 4px solid var(--accent); border-radius: 10px; transition: transform .15s ease, box-shadow .15s ease; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.10); }
+.card h3 { color: var(--accent); }
+.card .tag { display: inline-block; background: var(--soft); color: var(--accent); padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: bold; }
+.card .rating { color: #b45309; font-weight: bold; }
+.card .price { font-weight: bold; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.booking { margin-top: 10px; }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } header { flex-direction: column; align-items: flex-start; } }
+
+
+:root { --accent:#147d72 !important; --accent-hover:#10665d !important; --soft:#e8f2ef !important; --soft-line:#cbded8 !important; }
+body { background:#f3f6f8 !important; color:#263238 !important; font-family:Arial,Helvetica,sans-serif !important; }
+a { color:#147d72 !important; }
+header { background:#ffffff !important; border-bottom:1px solid #d7e0e5 !important; padding:16px max(20px, calc((100% - 1080px)/2)) !important; }
+header h1 a { color:#263238 !important; text-decoration:none !important; }
+header p,.muted { color:#64748b !important; }
+main { max-width:1080px !important; padding:34px 22px !important; }
+main h2 { color:#263238 !important; border-bottom:0 !important; padding-bottom:0 !important; }
+.notice { background:#e8f2ef !important; color:#263238 !important; border:1px solid #cbded8 !important; border-left:4px solid #147d72 !important; border-radius:8px !important; }
+.grid { gap:18px !important; }
+.card { background:#ffffff !important; color:#263238 !important; border:1px solid #d7e0e5 !important; border-top:1px solid #d7e0e5 !important; border-radius:12px !important; padding:19px !important; box-shadow:0 3px 12px rgba(38,50,56,.07) !important; }
+.card:hover { border-color:#147d72 !important; transform:translateY(-3px) !important; box-shadow:0 8px 20px rgba(38,50,56,.11) !important; }
+.card h3 { color:#263238 !important; }
+.card .tag,.tag { display:inline-block; background:#e8f2ef !important; color:#147d72 !important; border-radius:999px !important; padding:3px 9px !important; font-size:12px !important; font-weight:700 !important; }
+.rating,.price { color:#263238 !important; font-weight:700 !important; }
+button,.button { background:#147d72 !important; color:#ffffff !important; border:1px solid #147d72 !important; border-radius:7px !important; }
+button:hover,.button:hover { background:#10665d !important; border-color:#10665d !important; }
+.button.outline { background:#ffffff !important; color:#147d72 !important; border-color:#147d72 !important; }
+.button.outline:hover { background:#e8f2ef !important; }
+.booking { border-color:#d7e0e5 !important; }
+footer { background:#ffffff !important; color:#64748b !important; border-top:1px solid #d7e0e5 !important; }
+@media(max-width:600px) { header { align-items:center !important; text-align:center !important; } main { padding:24px 16px !important; } .grid { grid-template-columns:1fr !important; } .actions { gap:8px !important; } }
+</style>
+</head>
+<body>
+
+<header>
+    <h1><a href="op.html">QuickService</a></h1>
+    <p>All home services at one stop</p>
+</header>
+
+<main>
+    <h2>Carpentry Services in Mumbai</h2>
+    <p class="muted">Location: Mumbai, Maharashtra | 10 providers listed</p>
+
+    <div class="grid">
+
+<div class="card" data-name="Urban Company">
+    <h3>Urban Company</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Rating: <span class="rating">4.8</span> / 5</p>
+    <p>Professional Carpenter</p>
+    <p>Area: Mumbai</p>
+    <p>Door &amp; Window Repair</p>
+    <p>Furniture Assembly</p>
+    <p>Price: <span class="price">Starts at ₹79</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="NoBroker Home Services">
+    <h3>NoBroker Home Services</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Rating: <span class="rating">4.7</span> / 5</p>
+    <p>Carpenter Services</p>
+    <p>Area: Mumbai</p>
+    <p>Door Repair &amp; Installation</p>
+    <p>Furniture Work</p>
+    <p>Minor Repairs</p>
+    <p>Price: <span class="price">Starts at ₹99</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="Housejoy">
+    <h3>Housejoy</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Rating: <span class="rating">4.6</span> / 5</p>
+    <p>Home Improvement Services</p>
+    <p>Area: Mumbai</p>
+    <p>Furniture Services</p>
+    <p>Door &amp; Window Work</p>
+    <p>Carpenter Repairs</p>
+    <p>Price: <span class="price">Quote Required</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="Hometriangle">
+    <h3>Hometriangle</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Rating: <span class="rating">4.7</span> / 5</p>
+    <p>Carpenter Professionals</p>
+    <p>Area: Mumbai</p>
+    <p>Furniture Repair</p>
+    <p>Door Repair</p>
+    <p>Custom Woodwork</p>
+    <p>Price: <span class="price">Quote Required</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="Bro4u">
+    <h3>Bro4u</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Rating: <span class="rating">4.6</span> / 5</p>
+    <p>Carpenter Services</p>
+    <p>Area: Mumbai</p>
+    <p>Furniture Assembly</p>
+    <p>Door &amp; Window Work</p>
+    <p>Furniture Repairs</p>
+    <p>Price: <span class="price">Quote Required</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="Sulekha Carpenter Services">
+    <h3>Sulekha Carpenter Services</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Rating: <span class="rating">4.5</span> / 5</p>
+    <p>Local Carpenter Professionals</p>
+    <p>Area: Mumbai</p>
+    <p>Furniture Repair</p>
+    <p>Door &amp; Window Repair</p>
+    <p>Custom Woodwork</p>
+    <p>Price: <span class="price">Quote Required</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="Justdial Carpenter Services">
+    <h3>Justdial Carpenter Services</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Rating: <span class="rating">4.5</span> / 5</p>
+    <p>Local Carpenter Services</p>
+    <p>Area: Mumbai</p>
+    <p>Furniture Making</p>
+    <p>Door Repair</p>
+    <p>Woodwork &amp; Installation</p>
+    <p>Price: <span class="price">Quote Required</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="Mr. Carpenter Mumbai">
+    <h3>Mr. Carpenter Mumbai</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Carpentry Services</p>
+    <p>Area: Mumbai</p>
+    <p>Furniture Repair</p>
+    <p>Door Installation</p>
+    <p>Custom Woodwork</p>
+    <p>Price: <span class="price">Quote Required</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="Carpenter Services Mumbai">
+    <h3>Carpenter Services Mumbai</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Residential Carpentry</p>
+    <p>Area: Mumbai</p>
+    <p>Furniture Assembly</p>
+    <p>Door &amp; Window Repairs</p>
+    <p>General Carpentry</p>
+    <p>Price: <span class="price">Quote Required</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+<div class="card" data-name="Carpenterwale">
+    <h3>Carpenterwale</h3>
+    <p class="tag">Listed Provider</p>
+    <p>Professional Carpentry</p>
+    <p>Area: Mumbai</p>
+    <p>Furniture Work</p>
+    <p>Door &amp; Window Work</p>
+    <p>Custom Woodwork</p>
+    <p>Price: <span class="price">Quote Required</span></p>
+    <div class="actions">
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">Call</button>
+        <button class="button outline" type="button" onclick="contactUnavailable(this)">WhatsApp</button>
+        <button onclick="book(this)">Book Now</button>
+    </div>
+    <div class="booking">
+        <p>Share your location with this provider so they can find you.</p>
+        <button onclick="getLocation(this)">Get My Location</button>
+        <p class="loc"></p>
+        <div class="loc-actions"></div>
+    </div>
+</div>
+
+    </div>
+
+    <p class="back"><a href="servicemum.html">Back to Services</a></p>
+</main>
+
+<footer>
+    <p>&copy; 2026 QuickService. All rights reserved.</p>
+    <p><a href="more.html">About Us</a> | <a href="copyright.html">Copyright Policy</a></p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
